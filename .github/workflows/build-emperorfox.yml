@@ -22,8 +22,7 @@ jobs:
 
       - name: Compile EmperorFox APK
         working-directory: ./fenix
-        # We added -x to completely skip the broken Mozilla telemetry tasks
-        run: ./gradlew app:assembleDebug -x assembleNimbusTools -x nimbusExperimenter --max-workers=2
+        run: ./gradlew app:assembleDebug -x assembleNimbusTools --stacktrace --max-workers=2
 
       - name: Upload EmperorFox APK
         uses: actions/upload-artifact@v4
