@@ -20,16 +20,16 @@ jobs:
         working-directory: ./fenix
         run: chmod +x ./gradlew
 
-      - name: Inject Dummy Nimbus Tool
+      - name: Inject Real Nimbus Code Generator
         run: |
           mkdir -p ./fenix/build/bin/nimbus/125.20240317050356/
-          echo '#!/bin/bash' > ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml
-          echo 'exit 0' >> ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml
+          curl -L -o ./fenix/nimbus-fml.zip "https://github.com/mozilla/application-services/releases/latest/download/nimbus-fml-x86_64-unknown-linux-gnu.zip"
+          unzip -j ./fenix/nimbus-fml.zip -d ./fenix/build/bin/nimbus/125.20240317050356/
           chmod +x ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml
 
       - name: Compile EmperorFox APK
         working-directory: ./fenix
-        run: ./gradlew app:assembleDebug -x assembleNimbusTools --stacktrace --max-workers=2
+        run: ./gradlew app:assembleDebug --stacktrace --max-workers=2
 
       - name: Upload EmperorFox APK
         uses: actions/upload-artifact@v4
