@@ -20,6 +20,13 @@ jobs:
         working-directory: ./fenix
         run: chmod +x ./gradlew
 
+      - name: Secretly Inject Missing Nimbus Tool
+        run: |
+          mkdir -p ./fenix/build/bin/nimbus/125.20240317050356/
+          curl -L -o ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml.zip "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.application-services.application-services.build.nimbus-fml-x86_64-unknown-linux-gnu.latest/artifacts/public/build/nimbus-fml-x86_64-unknown-linux-gnu.zip" || curl -L -o ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml.zip "https://github.com/mozilla/application-services/releases/download/v125.0.0/nimbus-fml-x86_64-unknown-linux-gnu.zip"
+          unzip ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml.zip -d ./fenix/build/bin/nimbus/125.20240317050356/
+          chmod +x ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml
+
       - name: Compile EmperorFox APK
         working-directory: ./fenix
         run: ./gradlew app:assembleDebug -x assembleNimbusTools --stacktrace --max-workers=2
