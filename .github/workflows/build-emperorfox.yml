@@ -16,14 +16,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # We added 'working-directory' here to point to the fenix folder
       - name: Grant Execute Permission to Gradle
+        working-directory: ./fenix
         run: chmod +x ./gradlew
 
+      # We added it here too so it compiles the right app
       - name: Compile EmperorFox APK
+        working-directory: ./fenix
         run: ./gradlew app:assembleDebug
 
+      # Notice the path changed to fenix/app/build/...
       - name: Upload EmperorFox APK
         uses: actions/upload-artifact@v4
         with:
           name: EmperorFox-Android
-          path: app/build/outputs/apk/debug/*.apk
+          path: fenix/app/build/outputs/apk/debug/*.apk
