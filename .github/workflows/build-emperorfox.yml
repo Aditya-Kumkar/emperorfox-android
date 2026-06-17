@@ -1,17 +1,17 @@
 name: Compile EmperorFox
 
 on:
-  workflow_dispatch: # This allows you to click a button to run the build
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -23,7 +23,7 @@ jobs:
         run: ./gradlew app:assembleDebug
 
       - name: Upload EmperorFox APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: EmperorFox-Android
           path: app/build/outputs/apk/debug/*.apk
