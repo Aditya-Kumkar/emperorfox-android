@@ -28,8 +28,11 @@ jobs:
           git clone https://github.com/mozilla/application-services.git app-services-src
           cd app-services-src
           
-          # Rewind the repository exactly to March 17, 2024 to match your EmperorFox codebase
+          # Rewind the repository exactly to March 17, 2024
           git checkout $(git rev-list -n 1 --before="2024-03-18 00:00" main)
+          
+          # Fetch the missing submodule dependencies (fixes the Glean crash)
+          git submodule update --init --recursive
           
           # Build the historically accurate version of the tool
           cargo build --release -p nimbus-fml
