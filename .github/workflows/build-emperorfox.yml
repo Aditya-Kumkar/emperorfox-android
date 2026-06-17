@@ -1,3 +1,31 @@
-- name: Compile EmperorFox APK
+name: Compile EmperorFox
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant Execute Permission to Gradle
+        working-directory: ./fenix
+        run: chmod +x ./gradlew
+
+      - name: Compile EmperorFox APK
         working-directory: ./fenix
         run: ./gradlew app:assembleDebug --stacktrace --max-workers=2
+
+      - name: Upload EmperorFox APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmperorFox-Android
+          path: fenix/app/build/outputs/apk/debug/*.apk
