@@ -20,20 +20,23 @@ jobs:
         working-directory: ./fenix
         run: chmod +x ./gradlew
 
-      - name: Bulletproof Nimbus Injector
+      - name: Time-Travel Nimbus Injector
         run: |
           mkdir -p ./fenix/build/bin/nimbus/125.20240317050356/
           
-          if curl --fail -L -o ./fenix/nimbus-fml.zip "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/project.application-services.v2.nimbus-fml.latest/artifacts/public/build/nimbus-fml-x86_64-unknown-linux-gnu.zip"; then
-            unzip -o -j ./fenix/nimbus-fml.zip -d ./fenix/build/bin/nimbus/125.20240317050356/
-          else
-            git clone --depth 1 https://github.com/mozilla/application-services.git app-services-src
-            cd app-services-src
-            cargo build --release -p nimbus-fml
-            cp target/release/nimbus-fml ../fenix/build/bin/nimbus/125.20240317050356/
-            cd ..
-          fi
+          # Clone the Mozilla tools repo
+          git clone https://github.com/mozilla/application-services.git app-services-src
+          cd app-services-src
           
+          # Rewind the repository exactly to March 17, 2024 to match your EmperorFox codebase
+          git checkout $(git rev-list -n 1 --before="2024-03-18 00:00" main)
+          
+          # Build the historically accurate version of the tool
+          cargo build --release -p nimbus-fml
+          
+          # Inject it into your build folder
+          cp target/release/nimbus-fml ../fenix/build/bin/nimbus/125.20240317050356/
+          cd ..
           chmod +x ./fenix/build/bin/nimbus/125.20240317050356/nimbus-fml
 
       - name: Compile EmperorFox APK
