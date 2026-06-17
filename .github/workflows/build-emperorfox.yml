@@ -31,7 +31,7 @@ jobs:
           # Rewind the repository exactly to March 17, 2024
           git checkout $(git rev-list -n 1 --before="2024-03-18 00:00" main)
           
-          # Fetch the missing submodule dependencies (fixes the Glean crash)
+          # Fetch the missing submodule dependencies
           git submodule update --init --recursive
           
           # Build the historically accurate version of the tool
@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: EmperorFox-Android
-          path: fenix/app/build/outputs/apk/debug/*.apk
+          path: fenix/app/build/outputs/apk/**/*.apk
